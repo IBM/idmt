@@ -1,0 +1,147 @@
+<project name="IBMExtract" default="build" basedir=".">
+	  <!--
+	  A simple Ant build file that will produce a IBMExtract jar file
+	  -->
+	<target name="build">
+	  	<echo message="Compiling IBM Data Movement Tool ..."/>
+        
+		<delete quiet="true">
+	       <fileset dir="${basedir}/output"/>
+	    </delete>
+
+		<mkdir dir="${basedir}/build"/>
+        <mkdir dir="${basedir}/output"/>
+		
+	    <copy todir="${basedir}/build/ibm">
+		   <fileset dir="${basedir}/src/ibm">
+		   	 <include name="ZOSFtp.java"/>
+		   	 <include name="ZFileProcess.java"/>
+		   	 <include name="SchemaData.java"/>
+		   	 <include name="RunDB2Load.java"/>
+		   	 <include name="DBData.java"/>
+		   	 <include name="Constants.java"/>		   
+		   	 <include name="RunSQLScripts.java"/>
+		   	 <include name="InputGUIStreamHandler.java"/>
+		   	 <include name="InputStreamHandler.java"/>
+		   	 <include name="SQL.java"/>
+			 <include name="GenerateExtract.java"/>
+			 <include name="GenerateMeet.java"/>
+			 <include name="IBMExtractConfig.java"/>
+			 <include name="IBMExtractGUI2.java"/>
+		   	 <include name="RunTool.java"/>
+			 <include name="StateExtractTab.java"/>
+			 <include name="SplitExtractTab.java"/>
+			 <include name="MenuBarView.java"/>
+			 <include name="Settings.java"/>
+			 <include name="IBMExtractUtilities.java"/>
+		     <include name="OutputFileTab.java"/>
+		     <include name="FileViewer.java"/>
+		   	 <include name="RunDB2Script.java"/>
+		   	 <include name="RunScript.java"/>
+		   	 <include name="RunGenerateExtract.java"/>
+			 <include name="GenInput.java"/>
+			 <include name="Count.java"/>
+			 <include name="Version.java"/>
+			 <include name="Jd.java"/>
+			 <include name="Cleanup.java"/>
+		   	 <include name="About.java"/>
+		   	 <include name="RunDeployObjects.java"/>
+		   	 <include name="PLSQLInfo.java"/>
+		   	 <include name="BuildPLSQLObjects.java"/>
+		   	 <include name="Tee.java"/>
+		   	 <include name="GetIDMTUpdate.java"/>
+		   	 <include name="CreateVersionImage.java"/>
+		   	 <include name="Pipes.java"/>
+		   	 <include name="ListPipeLogs.java"/>
+		   	 <include name="TinyMig.java"/>
+		   	 <include name="TurboFix.java"/>
+		   	 <include name="GenerateParallelScripts.java"/>
+		   	 <include name="GetTableCount.java"/>
+		   	 <include name="FixCheck.java"/>
+		   	 <include name="LoadReport.java"/>
+		   	 <include name="SelectTables.java"/>
+		   	 <include name="TableList.java"/>
+		   	 <include name="StopWatch.java"/>
+		   	 <include name="DeployObjects.java"/>
+		   	 <include name="SetParams.java"/>
+		   	 <include name="RunIDMTVersion.java"/>
+		   	 <include name="DataCheck.java"/>
+		   	 <include name="IndexData.java"/>
+		   	 <include name="FKData.java"/>
+		   	 <include name="PartitionData.java"/>
+		   	 <include name="TabColumnsData.java"/>
+		   	 <include name="RoutineOptData.java"/>
+		   	 <include name="ProcColumnsData.java"/>
+		   	 <include name="UniqData.java"/>
+		   	 <include name="CountExcept.java"/>
+		   	 <include name="DataMap.java"/>
+		   	 <include name="BlobVal.java"/>
+		   	 <include name="BinData.java"/>
+		   	 <include name="DumpData.java"/>		   	
+		   	 <include name="RunNZLoad.java"/>		   	
+		   	 <include name="NZLoadStatus.java"/>		   	
+		   	 <include name="zOSLoad.java"/>		   	
+			 <include name="zOSLoader.java"/>	
+		   	 <include name="ProcessLOBFile.java"/>
+		   	 <include name="IOBuffer.java"/>
+		   	 <include name="PingWorker.java"/>
+		    </fileset>
+	    </copy>
+		
+		<copy todir="${basedir}/build">
+			<fileset dir="${basedir}/src/com"/>
+		</copy>
+
+		<copy todir="${basedir}/build/jsyntaxpane">
+			<fileset dir="${basedir}/src/jsyntaxpane"/>
+		</copy>
+
+		<copy todir="${basedir}/build/ibm/lexer">
+			<fileset dir="${basedir}/src/ibm/lexer"/>
+		</copy>
+
+		<copy todir="${basedir}/output">
+		   <fileset dir="${basedir}">
+			 <include name="driver.properties"/>
+			 <include name="datamap.properties"/>
+			 <include name="datamapnz.properties"/>
+			 <include name="url.properties"/>
+			 <include name="jdbcdriver.properties"/>
+		   	 <include name="SchemaExcludeList.properties"/>
+		   	 <include name="DeployFiles.properties"/>
+		   	 <include name="compatibilityFiles.properties"/>
+		   	 <include name="jsyntaxpane.config.properties"/>
+		   	 <include name="jsyntaxpane.kitsfortypes.properties"/>
+		   	 <include name="jsyntaxpane.syntaxstyles.properties"/>
+		   	 <include name="splash.gif"/>
+		   	 <include name="About.txt"/>
+		   	 <include name="whatisnew.txt"/>
+		   </fileset>
+	       <fileset dir="${basedir}/src" includes="ibm/resources/**/*"/>
+	       <fileset dir="${basedir}/src" includes="com/jgoodies/looks/common/shadow.png,
+	           com/jgoodies/looks/plastic/icons/**/*,
+	           com/jgoodies/looks/windows/icons/**/*" />
+	    </copy>
+	    <javac srcdir="${basedir}/build" classpath="jdbc/EZAFTP.jar:jdbc/ibmjzos.jar:jdbc/xdb.jar:jdbc/ojdbc14.jar:jdbc/db2jcc.jar" destdir="${basedir}/output" debug="on"/>
+	    <delete quiet="true">
+	       <fileset dir="${basedir}/build"/>
+	    </delete>
+	</target>
+	
+    <target name="buildJar" depends="build" description="Create Jar for distribution" >
+	  	<echo message="Build IBMDataMovementTool.jar ..."/>
+    	<property name="version.num" value="2.00"/>
+    	<buildnumber file="build.num"/>
+		<jar jarfile="IBMDataMovementTool.jar" basedir="${basedir}/output">
+	      <manifest>
+	          <attribute name="Built-By" value="Vikram S Khatri and Igor Siljanovski"/>
+	          <attribute name="user-Email" value="vikram.khatri@us.ibm.com"/>
+	        <attribute name="Main-Class" value="ibm.RunTool"/>
+	      	<attribute name="Implementation-Version" value="${version.num}-b${build.number}"/>
+	      </manifest>
+		</jar>
+    	<zip basedir="." destfile="IBMDataMovementTool.zip" includes="IBMDataMovementTool.cmd,IBMDataMovementTool.sh,IBMDataMovementTool.jar,Pipe.dll,Pipe64.dll"/>
+    	<echo message="Creating DMT Version image for dw article ..."/>
+    	<java classpath="${basedir}/IBMDataMovementTool.jar" classname="ibm.CreateVersionImage"  taskname="CreateVersionImage" fork="true"/>
+    </target>	
+</project>

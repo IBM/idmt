@@ -1,0 +1,934 @@
+Note: Double click anywhere to clear the contents.
+
+2015/02/01
+Corrected single quote in column name issue in MySQL
+Provided support for TIMESTAMP WITh TIME ZONE to VARCHAR(6) with time zone info for Oracle
+ 
+2012/10/29
+
+Corrected Materialized View Generation.
+Corrected handling of mappings defined in CustomDataMapping.
+Corrected handling of mapping between MYSQL TEXT & MEDIUMTEXT to CLOB.
+
+
+2012/05/18
+
+Fixed bugs related to generation of views and materialized views.
+
+Added capability to extract all roles present Oracle database (Excluding for in-built Oracle schema).  
+
+Corrected display labels on Extract and Deploy buttons.
+
+2011/07/07
+
+Fixed some bugs for data and objects extraction from Oracle and DB2
+
+2011/07/01
+
+Fixed dataset is in use problem for migration from a source database to z/OS.
+
+2011/06/28
+
+A GUI for mapping the source schema to the destination so that it is an easy process.
+Hit generate data migration script. Go to the Select Tables tab and you can do the mapping and 
+regenerate the tables script and now it is a one step process. 
+
+2011/06/22
+
+Behavior of the tool has been modified. The new changes are:
+
+1. IBMExtract.properties file name is no longer used. The new name is IDMTConfig.properties file. The tool will
+   read the existing IBMExtract.properties file and copy the contents to the IDMTConfig.properties file and the 
+   old IBMExtract.properties file is then deleted.
+
+2. The location of the IDMTConfig.properties file is now in the output directory and not in the base directory where tool
+   was copied. This has been done to use different directory for different databases so that one does not have to specify
+   new params when source database was changed from one to another.
+   
+3. When you click on the output directory (...) button and specify an existing output directory, it will read the contents 
+   of the IDMTConfig.properties file and load it.
+   
+4. While working in a specified output directory and before hitting the Extract button, if you change the location of the
+   output directory, the contents of the IDMTConfig.properties are copied to the new directory. This is 
+   just a simple way to have multiple directory. e.g., one for DDL and another for data etc.
+   
+5. The some of the JVM switch names have been changed. For example: IBMExtractPropFile name has been changed to IDMTConfigFile
+   but this should be transparent to the user. You do not have to worry about this. 
+   
+6. The IDMTConfig.properties file param oracleNumberMapping behavior is modified as per details given below:
+
+   When precision is 0, DB2 data type used is DECFLOAT(16) or NUMBER when DB2 compatibility is used for Oracle. 
+   Internally DB2 stores NUMBER (without precision and scale) as DECFLOAT(16).
+
+   When precision is between 1 and 4, it is set to SMALLINT.
+   When precision is between 5 and 9, it is set to INTEGER.
+   When precision is between 10 and 18, it is set to BIGINT.
+   When precision is between 19 and 31, it is set to DECFLOAT(16) or FLOAT when DB2 is < 9.5
+   When precision is > 31, it is set to DECFLOAT(16) or DOUBLE when DB2 is < 9.5
+
+   When oracleNumberMapping is set to false, the Oracle NUMBER are mapped as it is in DB2.
+
+   However to meet a requirement to map all Oracle NUMBER data type to a fixed data type such as DECIMAL(18,6), 
+   you can specify a fixed data type to this param.
+
+   oracleNumberMapping=DECIMAL(18,6)                
+
+2011/06/10
+
+Added BLOB and CLOB size determination from Oracle using this query when Oracle LOBS
+were defined without size:
+
+select max(dbms_lob.getlength(columnName)) from Table;
+
+2011/06/02
+
+Added support to load data from the data files using bulk inserts in DB2 z/OS from Windows or Linux / Unix platforms
+to do data migration to z/OS DB2 on mainframe.
+
+2011/05/24
+
+Added param tempFilesPath so that TEMPFILE PATH can be added to the LOAD statement to specify another path 
+for the temporary files used by the DB2 load for large data.
+
+Allowed to retain pure spaces from a column even when trimBlankSpaces=true in the IBMMExtract.properties 
+
+2011/05/20
+
+Support for Netezza as a target database 
+
+2011/05/10
+
+Allowed to use user defined suffix for schema and table names for exception tables by using properties 
+exceptSchemaSuffix=_EXP exceptTableSuffix= 
+If above are used, the schema name will have suffix _EXP and table name none. If some one wants to have exception tables 
+in the same schema then use exceptSchemaSuffix= exceptTableSuffix=_EXP
+  
+2011/05/09
+
+DB2 LOAD Exception table support for allowing DB2 load to dump constraints violation data in Exception tables.
+The exception tables are created automatically and a report is also generated giving count of rows from the
+exception tables. This is controlled through a param loadException and the default value is set to true.
+
+2011/04/27
+
+Blocked MGMT_USER user and AQ_ADMINISTRATOR_ROLE role for Oracle
+
+2011/04/25
+
+Fixed "Work completed" message not appearing on the output tab
+Fixed grants to a ROLE in Oracle
+
+2011/04/21
+Fix for Oracle Date value in compatibility mode
+
+2011/04/18
+
+Fix for the Custom Data Type Mapping in CustomDataMapping.properties to use source schema name and table name instead of the 
+target schema name and table name.
+
+2011/04/14
+
+Oracle: Extract only schema names that are used and eliminate login schemas as they are not useful from extract standpoint.
+
+2011/04/13
+
+Sybase SKIN specific issues:
+
+1. ACS name can be anything now. 
+2. FK issue is fixed (Thanks Jian for test cases. It was a very subtle bug involving one table having more than one FK).
+3. The check constraints are now extracted.
+4. DUMP directory has 777 permission so that the load should not fail for user other than instance owner
+
+2011/03/25
+
+Removed N / 3 reduction for filenet
+Enabled extraction of unique constraints from Oracle and SQL Server and comment those 
+which were created on nullable column. The unique constraints
+on nullable column may not enable in DB2 if it contains more than one null value.
+Fixed check constraint generation issue where only one constraint was extracted from a table
+
+2011/03/20
+
+Removed dumpFile option from IBMExtract.properties file.
+Removed checkSetIntegrityDuringPipeLoad from IBMExtract.properties file.
+Added capability to extract messages from LOAD command and put it in a single file in logs directory
+Added norowwarnings (default false) parameter in IBMExtract.properties to add NOROWWARNINGS modifier in the LOAD statement. 
+
+2011/03/19
+Added DATA CAPTURE clause for migration from z/OS DB2
+Add a check to see if ulimit -n is not sufficient on Unix platforms. IDMT behaves erratically if ulimit -n is set too low.
+
+2011/03/18
+Added a check if load directory is different than output directory to make sure that is what you want.
+Fix for SQL Server Clustered index bug.
+Fix for Filenet for target database to disable compatibility feature.
+
+2011/03/17
+Fixed DBCLOB issue for Oracle when graphic = false
+
+2011/03/16
+Fix for Sybase using SKIN features for auto commit
+Disable Target DB2 with compatibility for FileNet
+Fixed DUMPFILE when LOAD is used from script or from the GUI using ADMIN_CMD
+Fix CLUSTER for indexes for SQL Server for FileNet
+Added clusteredIndexes property in IBMExtract.properties file to disable migrating clustered indexes to DB2.
+
+2011/03/14
+Added Unique clustered index for clustered PKs in SQL Server.
+
+2011/03/12
+Added sequence to the deploy menu. Fixed sequences so that it shows in the interactive deploy
+
+2011/03/09
+Fixed Generate Meet Input File exceptions when DB2 is not installed
+Fixed pipe closed problem when outputting result to the View File tab
+ 
+2011/03/08
+
+Fixed too many indexes and foreign keys generation problem for databases other than Oracle
+
+2011/02/23
+
+Fixed to_date in Oracle partitions
+
+2011/02/01
+
+Added performance improvements and store SQLs used for DDL generation in memory
+
+2010/11/09
+
+Added enhancement to select tables through GUI. After selecting tables from GUI,
+the information is saved in <dbname>.tables file. 
+
+2010/11/07
+
+Added support for specifying IBMExtract.properties file and modifying
+some values which were possible only by hand editing.
+
+2010/11/02
+
+Added following major functionality
+
+	1. Support for DB2 Compatibility Vector for Sybase using DB2 SKIN feature.
+	2. Deployment of Sybase objects using DB2 SKIN feature and ANTS JDBC driver.
+	   For above to work, set DB2 registry DB2_COMPATIBILITY_VECTOR=SYB using db2set command
+	   And, antsjconn2.jar or antsjconn3.jar should be specified alone with db2 jcc drivers.
+	3. Extract of Sybase table DDL, indexes, foreign keys, PKs, indexes, views, triggers, aliases,
+	   logins, groups, grants so that they can be deployed using DB2 SKIN feature.
+	   Please note: IDMT does not translate objects to DB2 if using SKIN feature as the translation
+	   is done by the SKIN layer.
+	4. Extract of aliases, views, triggers from z/OS DB2
+	5. *New* - procedure to deploy objects in DB2. The earlier method was to use DB2 client CLP but
+	   now objects are deployed using Java so there is no need of a client. However, LOAD can only be deployed
+	   if run from the DB2 server and not client. The remote loads are still generated but they need to 
+	   be deployed manually since Java program uses ADMIN_CMD procedure to invoke load and this can only 
+	   be done at the server. This new procedure was adopted to eliminate the need for storing passwords 
+	   in clear text in SQL scripts as few customers did not like it.  
+	6. Fixed foreign key problem if a table had more than one foreign key.
+	7. Added custom table space definition if required. For this to take effect, useBestPracticeTSNames=false
+	   must be set in IBMExtract.properties file. When scripts are generated for the first time, detailed
+	   help and a template is generated in CustomTableSpaceBufferPoolMapping.properties file which
+	   can be customized to specify table space names of a choice for each table space.
+	   When useBestPracticeTSNames=false and no entries are defined in CustomTableSpaceBufferPoolMapping.properties file,
+	   source database table space definitions are extracted from Oracle and z/OS DB2 as is. If any entry 
+	   is defined in CustomTableSpaceBufferPoolMapping.properties, it will override source database table space
+	   definitions.
+	8. Several other bug fixes were done as reported by customers.                   
+
+
+2010/09/21
+
+Added rewriting of DBMS_SQL.IS_OPEN() from  a boolean comparison into a comparison with 1 (for true) 
+        for this, Autofix needs to  
+     1) add a <cursorvar>_is_opened variable at top of procedure/function.  
+      for instance "cvar_is_opened integer;" based on the cvar variable used in the dbms_sql.is_open statement.
+        Autofix looks for integer and  number datatype for these variables. if not found it will  fail the rewrite.
+   
+     2) call to the DBMS_SQL.IS_OPEN( cvar) function and store into the variable declared in 1)
+     3) rewrite the IF statement into the following one: "IF ( cvar_is_opened =1 )then"
+  NOTE:  if the cursor variable cannot be found in the local pl/sql file, the rewrite of the dbms_sql.is_open()aborts with a message.
+   
+2010/08/05
+
+	Added support for MTK to process SQL Server Stored Procedure conversion.
+	
+	This is how it works:
+	
+	1. Click on Run Generate Input for MTK button when SQL Server is the source.  
+	   It will ask for MTK home and then extract stored procedure in a separate file with 
+	   dependent tables, views, and, other dependent SPs
+	2. This is done so that MTK can be used for convert SQL Server SP 
+	3. A mtkconfig.xml file is generated
+	4. runmtk command is generated
+	5. After this has been run, go to the output directory and run runmtk command
+	6. Make sure that the JAVA_HOME is set to IBM Java 1.5 or later MTK will fail in Sun Java
+	7. We could have extracted everything in a single file but one file per SP has been done 
+	   for easiness.   
+
+2010/07/24
+
+	Added support for Informix database as a source. 
+	There are 2 ways connection can be made to Informix database.
+	
+	A. By using ifxjdbc.jar (Informix JDBC driver). If you use this driver, you will need to
+	   specify informix Server name. This value is same as environment variable INFORMIXSERVER
+	   on your Informix server or value of DBSERVERNAME in your onconfig file.
+	B. By using db2jcc.jar driver (aka JCC driver). In order to use JCC driver, your
+	   informix server should be set up for DRDA connections. You should see an entry similar
+	   to the following in your sqlhosts file.
+	   
+	   	demo_on onsoctcp        localhost    5904
+		DEMO    drsoctcp        localhost    5903
+		
+		The DRDA entry will be like drsoctcp.      
+
+2010/07/15
+
+	How to use the tool for moving 10s of 1000s of tables in command line mode:
+	
+	1. IDMT for performance should always be run from the target DB2 server wherever that is.
+	2. When you launch, ./IBMDataMovementTool.sh on a Unix machine which does not have a GUI display capability (like a SSH connection), 
+	   the tool will switch to command line mode automatically. Or, you can force tool to run in 
+	   command line mode by using ./IBMDataMovementTool.sh -console
+	3. Answer all input questions and tool will generate necessary scripts in the output folder that you specify.
+
+	Case - 1 : If you had specified numJVM=1, you will see unload, geninput, rowcount, fixcheck and one <dbname>.tables scripts. The heart 
+	           of the tool in command line mode is unload command.
+
+				You can use geninput to regenerate <dbname>.tables file in case it is needed.
+
+				You may run rowcount at the end of full migration to compare row count report between source and target.
+				fixcheck is a script provided to run set integrity command.
+
+	Case - 2 : if you had specified  numJVM > 1 e.g. say 5) , you will see 5 work directory in your output directory such 
+	           as work01, work02 etc and each will have a set of 5 scripts as mentioned as above in Case - 1.
+
+	So, what is the difference:
+
+	<dbname>.tables file from main output directory is spilt as per the size of the table in round robin fashion 
+	between all work directory and this allows you to distribute the work between many work directory so that 
+	it is manageable for 1000s of tables. The tables are distributed as per the size so that work is 
+	distributed between evenly between different work directory.
+
+	For case - 1, you will go to output directory and run unload to run the tool.
+	For case - 2, you will run unload command from each work01, work02 etc directory.
+
+	For DDL, use : DDL=Check, Data=Check, Objects=Uncheck, numJVM=50, Threads=10, NumRows to extract=2000, Numrows to load=ALL
+
+	For 10,000 tables, use numJVM=50, so that you get 200 tables in each work directory. The main <dbname>.tables file in 
+	output directory, will be spilt as per size in all 50 work directory. You can start working in each work01, work02 manually and 
+	run unload command by hand, when it is 1/2 way through, start the next one and watch CPU% on target and source. 
+	Keep on increasing work until you reach to 90% of CPU on target machine.
+
+	With above approach, you can push the limits and believe me that you will be constrained by the machine hardware 
+	and not the tool. You can push CPU to maximum by using above approach.
+	
+2010/07/13
+
+	Update to Auto Fix for include files and others.
+		
+	Support added to extract SQL Server encrypted data by using CustomDataMapping.properties 
+	to specify either Certificate name or custom function name followed by key and certificate name.
+	Tool will modify the SELECT * FROM schema.table to appropriate expanded SQL statement either
+	by using tool's generated function using given certificate name or by using your custom function name
+	and key/certificate name. [Note: CustomDataMapping.properties file is generated automatically
+	by the tool in the output directory when you run it for the first time. There are detailed
+	instructions provided in this file to override data type at column level and to also use
+	same approach to decrypt data from MySQL and MS SQL Server. I will add support for other databases
+	when a need comes.
+	
+	You will see an entry in the log such as:
+
+    Re-writing SQL to get decrypted data. New SQL=SELECT pk, cast(dbo.FnDecrypt(BLOBVal) as VARBINARY(max)) BLOBVal FROM "Temp"."BlobTest"
+
+    If you choose to use your own decrypted function, you will now have to provide key and certificate in the CustomDataMapping.properties file.
+    The new format for the CustomDataMapping.properties is as follows:
+
+    Case-1: Override data type of the source table's column (Unchanged)
+    DS001.EMPLYOEE.EMPID=CHAR(5)
+
+    Case-2: Override data type of the source tables's column and specify a certificate to 
+            decrypt the data using SQL server DecryptByKeyAutoCert function. (UnChanged)
+    DS001.EMPLYOEE.SSN=CHAR(11):SSNCert
+
+    Case-3: Override data type of the source tables'c column and use your own function and specify 
+            key and certificate (Changed)
+    DS001.EMPLYOEE.SSN=CHAR(11)::cast(dbo.FnDecrypt(SSN) as varchar(max)):MyKey:MyCertificate
+	 
+2010/07/05
+
+	Teradata Support added for:
+	
+	a. Tables DDL
+	b. Primary Key
+	c. Unique and other Indexes
+	d. Defaults
+	e. Check Constraints
+	f. Foreign keys
+	g. Views (Extracted as it is from Teradata without any translation)
+	h. Data  
+
+2010/07/04
+
+	Added trigger to convert UPPERCASE attribute from Teradata to DB2
+	
+	e.g. Teradata Table
+	
+	CREATE SET TABLE vikram.t1 ,FALLBACK ,
+    NO BEFORE JOURNAL,
+    NO AFTER JOURNAL,
+    CHECKSUM = DEFAULT
+    (
+       c1 CHAR(20) CHARACTER SET LATIN UPPERCASE NOT CASESPECIFIC NOT NULL
+    )
+    UNIQUE PRIMARY INDEX ( c1 );
+
+	will migrate to DB2 as:
+	
+	CREATE  TABLE "VIKRAM"."T1"
+	(
+	"C1" CHAR(20)  NOT NULL 
+	)
+	;	
+	COMMENT ON TABLE "VIKRAM"."T1" IS 'This is a table t1 in schema vikram'
+	;
+	COMMENT ON COLUMN "VIKRAM"."T1"."C1" IS 'This is a column1 c1 in table t1 in schema vikram'
+	;
+	-- This trigger is created to do an upper case on columns defined in teradata
+	CREATE TRIGGER "VIKRAM"."TRIGUPCASE_BEFORE_T1"
+	BEFORE INSERT ON "VIKRAM"."T1"
+	REFERENCING NEW AS N FOR EACH ROW
+	SET (N.C1) = (UPPER(C1))
+	;
+	
+2010/07/04
+
+	Added constraints and triggers for Oracle number type where
+	precesion < scale OR scale < 0
+	
+	e.g. Oracle table:
+	SQL> desc t1
+    Name              Null?    Type
+    ----------------- -------- -----------------------
+
+    C1                         NUMBER(1,3)
+    C2                         NUMBER(1,2)
+    C3                         NUMBER(4,6)
+    C4                         NUMBER(2,10)
+    C5                         NUMBER(6,-2)	
+
+will migrate to DB2 as follows:
+
+	CREATE  TABLE "VIKRAM"."T1"
+	(
+	"C1" NUMERIC(3,3)  ,
+	"C2" NUMERIC(2,2)  ,
+	"C3" NUMERIC(6,6)  ,
+	"C4" NUMERIC(10,10)  ,
+	"C5" INTEGER  
+	)
+	;
+	
+	-- This check constraint is created to take care of Oracle number where precision < scale
+	ALTER TABLE "VIKRAM"."T1"
+	ADD CONSTRAINT ORANUMCK_1_T1
+	CHECK (C1 >= .001 AND C1 < .01)
+	;
+	
+	-- This check constraint is created to take care of Oracle number where precision < scale
+	ALTER TABLE "VIKRAM"."T1"
+	ADD CONSTRAINT ORANUMCK_2_T1
+	CHECK (C2 >= .01 AND C2 < .1)
+	;
+	
+	-- This check constraint is created to take care of Oracle number where precision < scale
+	ALTER TABLE "VIKRAM"."T1"
+	ADD CONSTRAINT ORANUMCK_3_T1
+	CHECK (C3 >= .001 AND C3 < .01)
+	;
+	
+	-- This check constraint is created to take care of Oracle number where precision < scale
+	ALTER TABLE "VIKRAM"."T1"
+	ADD CONSTRAINT ORANUMCK_4_T1
+	CHECK (C4 >= .000000001 AND C4 < .00000001)
+	;
+	
+	-- This trigger is created to take care of Oracle number where scale < 0
+	CREATE TRIGGER "VIKRAM"."TRIGORASCALE_BEFORE_T1"
+	BEFORE INSERT ON "VIKRAM"."T1"
+	REFERENCING NEW AS N FOR EACH ROW
+	SET (N.C5) = (ROUND(C5,-2))
+	;
+
+
+
+
+2010/06/18 
+   Added Autofix feature to transform scalar types into DB2 distinct types:  
+      create or replace type testcase.euro3 as decimal(10,2)
+    into
+      create  DISTINCT TYPE  testcase.euro3 as decimal(10,2) WITH COMPARISONS
+
+2010/06/14
+
+  Added an option mysqlZeroDateToNull for MySQL database. If this value is set to true,
+  it will treat MySQL date data of 0000-00-00 to NULL value in DB2. If this is set to 
+  false, the 0000-00-00 value will be taken as 0001-01-01 in DB2.
+  
+2010/06/12
+  Added menu option in GUI to allow turning on/off statistics generation in DB2 Load
+  Added menu option in GUI to allow turning on/off dump file option in DB2 Load
+  
+2010/06/11
+
+  New option Sync / Load to allow users to unload and load a table simultaneously.
+  As soon as a table is unloaded, the LOAD is run in a separate thread so that unload
+  loads are synchronized to cut-short on time.
+  
+  Sync / Load and Pipe load now also works on a single table that is unloaded in multiple
+  threads if using a WHERE clause in .tables file or using PARTITION <partitionName> for Oracle.
+  
+2010/06/10
+
+  Allowed users to override data type mapping of any table.column by putting an 
+  entry in CustomDataMapping.properties file. This file is generated on first run.
+  Read help in this file for how to specify.
+  
+  Allowed users to override NULL/NOT NULL mapping for any table.column by putting 
+  and entry in CustomNullMapping.properties file. This file is generated on first run/
+  Read help in this file for how to specify.
+  
+  Oracle NUMBET (without any precision) is mapped to DB2 NUMBER (without any precision)
+  if using DB2 compatibility vector. 
+
+2010/06/08
+  Added new enhancements for MySQL to extract views, procedures, triggers, converting enum 
+  data type to DB2 with check constraints
+  
+  Automation of generation of tables file in multiple directory to run the tool in parallel 
+  in JVM to distribute the workload uniform by arranging tables as per their sizes.
+     
+  Generation of table and column level comments for z/OS DB2 and MySQL
+ 
+
+2010/05/11
+ Fixed removal of BYTE & CHAR clauses in VARCHAR2() declarations. Previously it would not be removed under certain conditions.
+
+2010/04/21
+ 
+ Fixed Autofix for Object to Row rewrite of not final/final clause.(An extra end; was previously generated)
+
+2010/04/19
+ Added Autofix rewrite of dbms_lob.createtemporary into either EMPTY_CLOB() or EMPTY_BLOB() depending of the lob variable type.
+ Added -KEEP_WRAPPED and -REMOVE_WRAPPED wrapped options for command line autofix
+ 
+2010/04/16
+
+Added support for Sybase compatibility. When db2_compatibility_vector=SYB,
+the sybase related specific changes are implemented in the tool.
+
+Added a new option caseSensitiveTabColName which will allow one to retain
+case sensitive table names / column names from the source database.
+
+If this option is set to false, table names / column names will be converted to upper case. 
+
+2010/04/12
+
+Added Autofix rewrite of "GRANT EXECUTE ON <package_name> TO <xxx>" into "GRANT EXECUTE ON MODULE <package_name> TO <xxx>"
+Added Autofix rewrite of "REM ....." lines into "-- REM .... " lines when not in SQLPLUs mode.
+Added the varchar(32k) rewrite to the varchar2(32k) rewrite already in place. 
+ 
+2010/04/08
+
+Added support for Cp1252 encoding in the tool.
+
+2010/04/07
+
+How do I change default mapping?
+
+It has been our conscious effort not to allow changing default data type mapping
+in the tool. We took inputs from various sources to provide the best default
+data type mapping from source to DB2. However, our mapping may not be perfect
+and may sometime be in conflict what an end user might need. This type
+of requirement is rare so that is why there is no GUI interface to this.
+
+However, you can use following procedure to change the data type mapping
+between source and DB2.
+
+The data type mapping is in datamap.properties file in the IBMDataMovementTool.jar file.
+
+Extract this file from this JAR file using command 
+
+jar xf IBMDataMovementTool.jar datamap.properties.
+
+Make changes to this file for the data type mapping and copy this file in
+the directory where unload or db2ddl or db2load command is generated.
+
+Tool will look for a local datamap.properties file in the current
+directory and if it does not find one, it will then load the file from
+the JAR file. This way, you can modify default data type mapping.
+
+If you are using a local datamap.properties file, you will see a message
+
+Local Configuration file loaded: 'datamap.properties' 
+
+and this is an indication that the tool is using the file that you copied in the working directory.
+
+However, it is not guaranteed that this will work for some special data type 
+mapping where tool has some logic to change the data type automatically
+if it detects that the row size is getting > 32KB. However, those cases are not very common.
+ 
+2010/03/17
+
+Auto Fix  Features
+==================
+
+When you are in Interactive Deploy tab and want to use Auto Fix, follow these steps:
+
+ 1. Deploy the object from Interactive Deploy left tree by right clicking.
+ 2. If object deployment fails, go to the bottom right hand table where you see the error code listed.
+ 3. Right click on the row and click Auto Fix code.
+ 4. This invokes Auto Fix utility to do fixes.
+ 5. Deploy again by right clicking on the left hand tree for the object.
+ 6. You can revert back to the original source by right clicking on the row in the right hand table 
+    and clicking on Original Source option
+
+You can also use Auto Fix tab to use this utility to do one of the following.
+
+ - Convert Oracle SQL*Plus scripts to DB2 CLP*Plus Scripts.
+ - Convert Oracle DDL script to DB2. e.g. You have Oracle tables in a script and want to convert to DB2.
+ - Make quick fixes to PL/SQL code.
+ 
+Details of Auto Fix Utility  
+===========================
+
+The Auto Fix utility is a temporary quick fix to increase out-of-the-box compilation of PL/SQL source files. 
+It rewrites or removes PL/SQL features in PL/SQL source files to make it compatible with the DB2 
+PL/SQL parser.
+
+Auto Fix does this rewrite without changing the meaning of the original PL/SQL. 
+The new file generated by the tool is a proper PL/SQL file with these features commented out 
+(by default with a line prefix of --#IDMT). 
+This resulting file can then be processed by either IDMT, the DB2 Command Line Processor or the DB2 CLPPLUS Processor.
+ 
+Auto Fix relies on shallow, ad-hoc parsing, and can therefore miss rewriting unusual syntax 
+like multi-line statements or statements with C-style comments between keywords.
+ 
+There is no complicated configuration of the tool: just basic options. Therefore it sometimes 
+makes drastic choices. For instance, it removes table storage clauses and others without any attempt 
+to find a DB2 equivalent at this time, as storage design and data placement should be dealt with 
+after the porting stage, during the tuning and scalability testing phase.
+
+Note: in the documentation below,  DB2 V9.7 GA is equivalent to Auto Fix command line option -FP=0. 
+DB2 V9.7 Fixpack 1 would be option -FP=1 and so on. IDMT automatically obtains Fixpack information
+from DB2 and uses the option in the generated AutoFix script. 
+
+Feedback and Request for Fixes or New Features
+==============================================
+
+Auto Fix is currently developed and maintained by Patrick Dantressangle. 
+Email contact: dantress@uk.ibm.com 
+
+
+Auto Fix Utility - List of modifications
+========================================
+
+(A) SQL*PLUS/CLPPlus  features 
+    ==========================  
+
+ Parses SQL*PLUS variables and replaces them accordingly
+	– Even recursively. Variables inside variables
+	– DEFINE, UNDEFINE, &var., etc.
+	
+ Removes unused SQL*PLUS commands (SET, SHOW, etc.) not required for compiling DDL in the DB2 CLP
+	– The aim is not to run all anonymous blocks
+
+ Processes PL/SQL included files recursively by in-lining them for compilation in DB2 
+ (with start or @@ command)
+	– It creates one single file with all included in-lined when the MERGE option is used
+	 (that generates one single file to deploy in the proper order instead of many includes)
+
+ Transforms SQL*PLUS EXEC statements into DB2 CALL statements for processing in DB2 CLP
+
+ Transforms PROMPT commands into DB2 CLP ECHO commands
+
+(B) DDL features (some of the DDL fixes also apply to PL/SQL)
+    ===========================================================
+
+ Removes storage, index, and LOB() clauses from TABLE, INDEX, and primary key definitions
+	– It removes the () around the ALTER CONSTRAINT(ADD...) statements
+
+ Removes the ENABLE keyword from many DDL statements 
+  (primary key, foreign key, check and other constraints) and table column definitions.
+
+ Removes the parenthesis around columns DEFAULT
+	Example:
+		– "DTE_DATE" NUMBER(10,0) DEFAULT ('COUCOU') NOT NULL ENABLE,
+	will be changed into
+		– "DTE_DATE" NUMBER(10,0) DEFAULT 'COUCOU' NOT NULL, --XX ENABLE
+
+ Changes long raw() and raw() into BLOB and CLOB ( everywhere  in PL/SQL and in DDL ) 
+
+ Removes the NULL qualifiers for columns in TABLE definitions, leaving only NOT NULL
+	– Some customer code has both NULL and NOT NULL clauses specified in the same table 
+	  and DB2 doesn’t accept this at this point.
+
+ Replaces VARCHAR[2](32xxx) with length above 32672 into VARCHAR[2](32672) everywhere 
+  (parameters, columns, variables, etc.)
+
+ Replaces NUMBER() precision higher than 38 down to 31
+
+ Replaces NUMBER(*,x) with NUMBER(10,x).
+
+ Replaces float(x) with float, removing the precision text.
+    - For instance, many extraction scripts get a float(126) out of Oracle but DB2 
+      only accepts float or double. Auto Fix only replaces it to a float for now.
+
+ Removes the FORCE keyword on Create or replace view statements.
+
+ Removes the "FOR UPDATE NOWAIT;" or "FOR UPDATE" clauses in views
+
+ Removes the read only clauses in views
+	– DB2 is smart enough to decide of changing the view to read only.
+	– There may be some side effects however if the read only clause was here for 
+	  a specific behavior. DB2 tuning will help sort these specific case out on a case by case basis
+
+ Removes ALTER TRIGGER <triggername> ENABLE  statements by commenting them out. 
+
+Comments out SET TRANSACTION USE ROLLBACK statements
+
+(C) PL/SQL features
+    ==================
+
+ Transforms SAVEPOINT S; ->  SAVEPOINT S ON ROLLBACK RETAIN CURSORS;
+
+ Transforms ROLLBACK TO S -> ROLLBACK TO SAVEPOINT S;
+
+ Removes the AUTHID CURRENT_USER clause in the package definition
+
+ Replaces VARCHAR2(32xxx) with length above 32672 into VARCHAR2(32672) everywhere 
+  (parameters, columns, variables, etc.)
+
+ Replaces NUMBER() precision higher than 38 down to 31
+
+ Replaces NUMBER(*,x) with NUMBER(10,x). 
+	– This is flagged in a comment so it can be modified manually later 
+	  if 10 is not the correct precision.
+
+ Replaces float(x) -> float (removing the precision text).
+	- For instance, many extraction scripts get a float(126) out of Oracle but DB2 only accepts 
+	  float or double. Auto Fix only replaces it to float for now.
+
+ Replaces subtypes with the underlying data type within the same PL/SQL file. 
+  (IDMT should attach the package body to the package definition to make sure subtypes 
+   are replaced accordingly.
+   
+     – Auto Fix comments out the original subtype statement as well.
+		"subtype ShortTextType" is converted to varchar2(200) ;
+		
+		"type T_ValueTabType is table of ShortTextType index by integer;" is converted to 		
+		"type T_ValueTabType is table of VARCHAR2(200) index by integer;"
+		
+		 ShortTextType is replaced with VARCHAR2(200).
+		 
+	Conditions:
+	the subtype definition has to be on a single line alone.
+	The subtype has to be used in the same PL/SQL file. Auto Fix is not going across multiple PL/SQL files yet. 
+	The subtype has to be used with no qualifier. For instance mypckgname.mysubtype is not going 
+	to be resolved (yet).
+	The subtype will be replaced if part of a CAST but DB2 will not compile it if the underlying type 
+	is based on a %TYPE keyword.
+
+ Transforms PL/SQL nested tables into associative arrays by adding an index by clause to the definitions
+		type x is table of xx;
+	is transformed into
+		type x is table of xx index by integer;
+
+ Transforms stand-alone associative arrays into DB2 VARRAYs.
+		Create or replace type x as table of xx;
+	is transformed into
+		Create or replace type x as VARRAY(10) of xx;
+
+ Removes all PRAGMA restrict references clauses
+
+ Recognizes many implicit boolean conditions that are not accepted by DB2 9.7 GA ( option –FP=0) 
+ parser and makes them explicit by adding an ’=true’. 
+	These transformations are only generated if the FP=0 option is set 
+	– It is not bullet proof (no parser) but good enough to cover 80%to 90% of the cases
+	– Auto Fix doesn't change the %isopen,%isfound, or %isnotfound entries as these are already handled 
+	  by DB2 9.7 GA.
+	These transformations are only generated if the FP=0 option is set
+	Note In the example list below, x can be a variable or a function
+		i.   if x THEN/AND, if NOT x then/and
+		ii.  if (x) then/and, if not(x) then/and
+		iii. if ( x() ) then/and, if ( not x() ) then/and, if not( x() ) then/and
+		iv.  elsif x THEN/AND, elsif NOT x then/and
+		v.   else if (x) then/and
+		vi.  while x loop, while (x) loop, while not x loop, while not(x) loop, while x() loop, while (x()) loop, while not x() loop, while not(x()) loop
+		vii. if (x) and (y)
+
+ Transforms OBJECT() into ROW() or records()
+	– No transformation attempt is done for the methods yet. They are just created in their own fake 
+	  package with syntax errors for you to modify.
+	
+	Example:
+	CREATE OR REPLACE type obj_1 as object (
+		col1 NUMBER(22,0), col2 DATE,
+		static function GetNewRecord return obj_1,
+		static function F_GetRowInfo return varchar2) not final
+	/
+	is transformed into the ROW type that is correct and will compile in DB2, but the package 
+	obj_1 is incomplete: the user will have to modify it.
+	
+	CREATE OR REPLACE type obj_1 AS ROW ( --XX AS OBJECT
+	col1 NUMBER(22,0), col2 DATE) --XX finishing object here for now
+	/
+	CREATE OR REPLACE package obj_1 AS (--XX AS OBJECT
+	function GetNewRecord return obj_1, --XX static
+	function F_GetRowInfo return varchar2 --XX ) not final static
+	end;
+	/
+
+ Changes stand-alone "CREATE OR REPLACE TYPE" into "CREATE TYPE". These transformations 
+ are only generated if the -FP=0 option is set
+
+ Removes the FORCE keyword on Create or replace view statements.
+
+ Removes the "FOR UPDATE NOWAIT;" or "FOR UPDATE" clauses in views.
+
+ Removes the "READ ONLY" clause in views
+	– DB2 is smart enough to decide of changing the view to read only.
+	– There may be some side effects however if the read only clause was here for a specific 
+	  behavior. DB2 tuning will help sort these specific case out on a case by case basis
+
+ Removes the NOCOPY qualifier for parameters. This shouldn’t impact semantics. 
+ It may have an impact on performance as DB2 may do more copying than necessary and some side effect 
+ if the original PL/SQL code was relying on the fact that the parameter was passed by reference.
+
+ Auto Fix can automatically find out what _CLOB or _BLOB suffix need to be attached to the following 
+ methods in most cases where the first parameter is in the scope of the PL/sql file compiled:
+ 
+	dbms_lob.append,
+	dbms_lob.open,
+	dbms_lob.close,
+	dbms_lob.copy,
+	dbms_lob.read,
+	dbms_lob.erase,
+	dbms_lob.trim,
+	dbms_lob.writeappend,
+	dbms_lob.write
+	
+ Auto Fix will look up for either a local variable or a parameter to the local procedure/function containing 
+ the dbms_lob method, find its type and then attach it as the suffix of the dbms_lob method. 
+ (It cannot find type in other packages.)
+
+ Rewrites RETURNING clause when ROWID is part of the retrieved columns in an INSERT statement 
+ as DB2 9.7 cannot have ROWID columns returned from transition tables.
+ 
+	insert into t (a,b) values(1,'cououc') returning rowid into rid;
+	
+    is transformed into
+	
+	insert into t (a,b) values(1,'cououc');
+	SELECT ROWID INTO RID FROM t WHERE a=1 AND b='cououc'; --XX rewrote RETURNING CLAUSE into a SELECT
+
+ Rewrite FORALL loops to FOR loops. 
+ These transformations are only generated if FP=0 option is set
+ 
+	FORALL i IN 1..V_DET_SITZ_NR.count()
+	    INSERT INTO …
+	    
+       is transformed into
+       
+	FOR i in 1..V_DET_SITZ_NR.count() LOOP
+	    INSERT INTO  .....
+	END LOOP;
+
+ Rewrite FETCH with BULK COLLECT INTO collection:  
+ These transformations are only generated if the FP=0 is set
+ 
+	– We chose a FOR loop over 1 million iterations to not have to add extra variable declarations at 
+	  beginning of procedure
+	– If that doesn't work for you, please contact dantress@uk.ibm.com so we can add an option to 
+	  increase this loop counter.
+
+	FETCH curs BULK COLLECT INTO collection
+	
+      is transformed into
+      
+	FOR myloop in 1..1000000;
+	       FETCH curs INTO collection(myloop);
+	       EXIT WHEN curs%notfound;
+	END LOOP;
+
+ Rewrite FETCH with BULK COLLECT INTO collection with a LIMIT x:  
+ These transformations are only generated if the FP=0 is set
+
+	FETCH curs BULK COLLECT INTO collection LIMIT x
+	
+       is transformed into
+       
+	FOR myloop in 1..x;
+	     FETCH curs INTO collection(myloop);
+	     EXIT WHEN curs%notfound;
+	END LOOP;
+
+ Rewrites simple modulo expressions like "x mod 3 =z" into DB2 "mod(x,3)=z".
+  
+	The comparison sign can be =, <=,>= or != I this expression.
+	 
+    The rewrite doesn't happen on very complex expressions like the following (v+fct() *3) mod 10 = 9
+
+ Rewrites TRIM(' ' FROM <identifier> )  functions into TRIM( <identifier>)
+
+ Changes multi-line C-style comments into SQL comments
+	– You can disable that feature with the -dont_modify_comment option
+
+2010/03/07
+	
+Question: Where can I locate 3 JAR files required for Oracle?
+Answer  : The main JDBC driver is ojdbc14.jar and it is absolutely necessary.
+          The 2 and 3rd JARs are optional and they will be needed if you have XML data type used in 
+          your Oracle database.
+
+          Generally, you can locate these files in your Oracle installation 
+          directory at these locations.
+
+          $ORACLE_HOME/jdbc/lib/ojdbc14.jar
+          $ORACLE_HOME/lib/xmlparserv2.jar
+          $ORACLE_HOME/RDBMS/jlib/xdb.jar
+
+Question: I do not want to grant DBA role to the user connecting to Oracle from IDMT. 
+          What privileges are needed in order to run IDMT?
+Answer:   GRANT SELECT_CATALOG_ROLE, CONNECT, SELECT ANY TABLE TO <username>; 
+
+Question: I do not want to grant SELECT_CATALOG_ROLE to the user connecting to Oracle from IDMT.
+          What privileges do I need to grant to the user?
+Answer:   Grant SELECT on the following views to the user.
+
+			DBA_TABLES
+			DBA_INDEXES
+			DBA_OBJECTS
+			DBA_SYNONYMS
+			DBA_TAB_PRIVS
+			DBA_COL_PRIVS
+			DBA_TRIGGERS
+			DBA_TAB_COLUMNS
+			DBA_MVIEWS
+			DBA_DIRECTORIES
+			DBA_SOURCE
+			DBA_TAB_COMMENTS
+			DBA_COL_COMMENTS
+			DBA_VIEWS
+			DBA_SEQUENCES
+			DBA_CONS_COLUMNS
+			DBA_CONSTRAINTS
+			DBA_IND_COLUMNS
+			DBA_IND_EXPFRESSIONS
+			DBA_PART_TABLES
+			DBA_LOBS
+			DBA_PART_KEY_COLUMNS
+			DBA_TAB_PARTITIONS
+			DBA_ROLE_PRIVS
+
+	

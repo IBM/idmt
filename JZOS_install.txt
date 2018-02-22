@@ -1,0 +1,39 @@
+1) First, you need access to the zip file that JZOS is distributed in.  You can download it here: http://www.alphaworks.ibm.com/tech/zosjavabatchtk/download
+
+2) This zip file contains a file named jzos.pax.  FTP this file to Unix System Services in binary mode.  FTP the file to the directory where you would like JZOS installed.
+
+3) Change to the directory where you placed the .pax file.
+
+4) Run the command: pax -rvf 
+This will created a subdirectory called jzos under the directory that you are in.  This subdirectory will be referred to as <JZOS_HOME>.
+
+5) In the user's home directory, create a file named .profile that looks like this:
+
+export CLPHOME=/usr/lpp/db2/db2910/db2910_base/lib/IBM                  
+export CLASSPATH=$CLASSPATH:/usr/lpp/db2/db2910/db2910_base/lib/clp.jar 
+export CLPPROPERTIESFILE=$HOME/clp.properties                           
+export LIBPATH=$LIBPATH:<JZOS_HOME>                               
+alias db2="java com.ibm.db2.clp.db2"   
+
+CLPHOME and CLASSPATH may have to be modified slightly depending on the environment.  Replace <JZOS_HOME> with the appropriate directory.
+
+6) In the user's home directory, create a file name clp.properties that looks like this:
+
+#Specify the value as ON/OFF or leave them blank              
+DisplaySQLCA=ON                                               
+AutoCommit=ON                                                 
+InputFilename=                                                
+OutputFilename=                                               
+DisplayOutput=                                                
+StopOnError=                                                  
+TerminationChar=                                              
+Echo=                                                         
+StripHeaders=                                                 
+MaxLinesFromSelect=                                           
+MaxColumnWidth=20                                             
+IsolationLevel=                                               
+<SUBSYSTEM_NAME>=<IP address>:<port number>/<location name>,USER,PASSWD
+
+Replace items on the last line as appropriate.
+
+7) Run the command chmod 777 <JZOS_HOME>/*.so

@@ -1,0 +1,10 @@
+*.log
+/bin
+/build
+/jdbc
+/output
+IBMDataMovementTool.jar
+IBMDatamovementToolVersion.jpg
+*.log
+GetIDMTUpdate.cmd
+IBMDataMovementTool.zip
