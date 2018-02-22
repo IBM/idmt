@@ -23,7 +23,7 @@ I still use the tool which is command line. The tool was first published without
 Usage of the tool
 =================
 
-This tool has not been updated in last 6 years but I still get few downloads report every day from IBM download site. It is amazing that people are still using the tool.
+This tool has not been updated in last 4 years but I still get few downloads report every day from IBM download site. It is amazing that people are still using the tool.
 
 Other Tools
 ===========
