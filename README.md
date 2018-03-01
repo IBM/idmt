@@ -16,14 +16,14 @@ The Java code is not very well organized and if a professional Java developer se
 When First Published
 ====================
 
-I used this tool only for myself for almost 6 years without anyone knowing about it. Then, people from IBM encouraged me to add a GUI so that it is usable by anyone and that was the hard part.
+I used this tool only for myself for almost 4 years without anyone knowing about it. Then, people from IBM encouraged me to add a GUI so that it is usable by anyone and that was the hard part.
 
 I still use the tool which is command line. The tool was first published without the source code in 2010. The link for the poorly written documentation is at : https://www.ibm.com/developerworks/data/library/techarticle/dm-0906datamovement/
 
 Usage of the tool
 =================
 
-This tool has not been updated in last 4 years but I still get few downloads report every day from IBM download site. It is amazing that people are still using the tool.
+This tool has not been updated in last 6 years but I still get few downloads report every day from IBM download site. It is amazing that people are still using the tool.
 
 Other Tools
 ===========
@@ -37,7 +37,7 @@ Later on IBM Harmony profiler tool was just a command line the way I wanted that
 Why open source?
 ================
 
-I was the only contributer to the tool and it has some of the very powerful features which are not in the tool. It is still the workhorse and can do a much better job of high speed migration in parallel and achieve 1 TB / hour migration speed.
+I was the only contributor to the IBM Data Movement tool and it has some of the very useful powerful features which did not make in to the IBM Database Conversion Workbench. IDMT is still the workhorse and can do a much better job of high speed migration in parallel and achieve 1 TB / hour migration speed.
 
 I approached IBM and took the permission to open source it so that the code remains in public domain if down the line, this tool is still used and some modifications are required.
 
@@ -51,7 +51,7 @@ Please refer to the IBM article for the usage of the tool. https://www.ibm.com/d
 Download
 ========
 
-The complied version of the tool (Jar) can be downloaded from this link:
+The compiled version of the tool (Jar) can be downloaded from this link:
 
 https://www-01.ibm.com/marketing/iwm/iwm/web/preLogin.do?lang=en_US&source=idmt
 
