@@ -11,7 +11,7 @@ I was not a professional developer but I knew little bit of Java programming sam
 
 I started working on the tool and starting using it with every customer engagement. Getting real customer feedback and making changes on the spot was the way tool was managed. The tool was purely customer driven requirements. The tool got better with each engagement and I kept on adding support for different source databases like Oracle, SQL Server, Access, Terradata, Netezza, PostgreSQL, MySQL and many others from time to time.
 
-The Java code is not very well organized and if a professional Java developer sees this code, they will tear their hairs and will comment "What a crapy code?". But this is what it is. It works and works very fast.
+The Java code is not very well organized and if a professional Java developer sees this code, they will tear their hairs and will comment "What a crappy code?". But this is what it is. It works and works very fast.
 
 When First Published
 ====================
@@ -51,18 +51,18 @@ Please refer to the IBM article for the usage of the tool. https://www.ibm.com/d
 Download
 ========
 
-The compiled version of the tool (Jar) can be downloaded from this link:
+The compiled version of the tool (`Jar`) can be downloaded from this link:
 
 https://www-01.ibm.com/marketing/iwm/iwm/web/preLogin.do?lang=en_US&source=idmt
 
 Organization
 ============
 
-The main folder under source is ibm which contains the heart of the tool - which is command line.
+The main folder under source is IBM which contains the heart of the tool - which is command line.
 
-The com and jsyntaxpane folders are for GUI part and mostly open source. I have not touched this code and just used for the GUI portion.
+The `com` and `jsyntaxpane` folders are for GUI part and mostly open source. I have not touched this code and just used for the GUI portion.
 
-The main tool is GenerateExtract.java and IBMExtractConfig.java for getting inout and generating the command files. The IBMExtractGUI2.java is the main entry point for the GUI.
+The main tool is `GenerateExtract.java` and `IBMExtractConfig.java` for getting in-out and generating the command files. The `IBMExtractGUI2.java` is the main entry point for the GUI.
 
 https://www-01.ibm.com/marketing/iwm/iwm/web/preLogin.do?lang=en_US&source=idmt
 
